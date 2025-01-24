@@ -49,6 +49,27 @@ Util.buildClassificationGrid = async function(data) {
     return grid;
 }
 
+/* Build the detail view HTML */
+Util.buildDetailView = async function(vehicle) {
+    let item;
+    if (vehicle) {
+        item = '<div class="detail-view">';
+        item += '<img src="' + vehicle.inv_image + '" alt="Image of '
+        + vehicle.inv_make + " " + vehicle.inv_model + ' on SCE Motors"'
+        + 'class="detail-img"/>';
+        item += '<div class="name-price">';
+        item += '<h2>' + vehicle.inv_year + ' ' + vehicle.inv_color + ' ' +  vehicle.inv_make + ' ' + vehicle.inv_model + ' ' + '</h2>';
+        item += '<span class="detail-span">Miles: ' + new Intl.NumberFormat('en-US').format(vehicle.inv_miles) + '</span>';
+        item += '<span class="detail-span">$' + new Intl.NumberFormat('en-US').format(vehicle.inv_price) + '</span>';
+        item += '<hr />';
+        item += '<p>' + vehicle.inv_description + '</p>'
+        item += '</div>';
+        } else {
+        item = '<p class="notice">Sorry, couldn\'t find a vehicle with this ID.</p>';
+    }
+    return item;
+}
+
 /* ************
 * Error-Handling Middleware
 ************ */

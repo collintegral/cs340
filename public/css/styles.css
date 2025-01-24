@@ -163,6 +163,10 @@ nav > ul > li:hover > a {
   max-width: 80%;
 }
 
+h1 {
+  text-align: center;
+}
+
 .name-price > h2 {
   margin: auto;
   text-align: center;
@@ -179,6 +183,44 @@ nav > ul > li:hover > a {
   text-align: center;
   font-weight: bold;
   letter-spacing: .1cap;
+}
+
+.name-price > .detail-span {
+  margin: 5px auto;
+}
+
+.name-price > p {
+  display: block;
+  margin: 10px auto;
+  max-width: 60%;
+  font-size: 1.25em;
+  text-align: justify;
+}
+
+.detail-img {
+  display: block;
+  margin: 20px auto;
+  border: 3px solid skyblue;
+  border-radius: 6px;
+  max-width: 90%;
+}
+
+.notice {
+  font-size: 1.5em;
+  font-weight: bold;
+  text-align: center;
+}
+
+footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.error-test {
+  text-decoration: none;
+  color: grey;
+  display: inline;
 }
 
 @media only screen and (min-width: 600px) {
@@ -212,5 +254,9 @@ nav > ul > li:hover > a {
   #inv-display > li {
     margin: 5px;
     flex: 30%;
+  }
+
+  .detail-view {
+    display: flex;
   }
 }

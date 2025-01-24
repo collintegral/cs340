@@ -12,6 +12,7 @@ const app = express()
 const static = require("./routes/static")
 const baseController = require("./controllers/baseController")
 const inventoryRoute = require("./routes/inventoryRoute")
+const errController = require("./controllers/errorController")
 const utilities = require("./utilities/")
 
 /* ***********************
@@ -24,17 +25,20 @@ app.set("layout", "./layouts/layout")
 /* ***********************
  * Routes
  *************************/
-app.use(static)
+app.use(utilities.handleErrors(static));
 
 // Inventory Route
-app.use("/inv", inventoryRoute);
+app.use("/inv", utilities.handleErrors(inventoryRoute));
+
+// Error Testing Route
+app.get("/error", utilities.handleErrors(errController.footerErr));
 
 // Index Route
 app.get("/", utilities.handleErrors(baseController.buildHome));
 
 // FileNotFound Route
 app.use(async (req, res, next) => {
-  next({status: 404, message: 'Could not find the requested page.'});
+  next({status: 404, message: '<p class="notice">Could not find the requested page.</p>'});
 });
 
 /* ********************
@@ -44,7 +48,7 @@ app.use(async (req, res, next) => {
 app.use(async (err, req, res, next) => {
   let nav = await utilities.getNav();
   console.error(`Error at: "${req.originalUrl}": ${err.message}`);
-  if (err.status == 404) {message = err.message;} else {message = "Something went wrong. Maybe try a different route?";}
+  if (err.status == 404) {message = err.message;} else {message = '<p class="notice">Something went wrong. Maybe try a different route?';}
     res.render("errors/error", {
     title: err.status || "Server Error",
     message,
