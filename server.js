@@ -31,7 +31,7 @@ app.use(utilities.handleErrors(static));
 app.use("/inv", utilities.handleErrors(inventoryRoute));
 
 // Error Testing Route
-app.get("/error", utilities.handleErrors(errController.footerErr));
+app.use("/error", utilities.handleErrors(errController.footerErr));
 
 // Index Route
 app.get("/", utilities.handleErrors(baseController.buildHome));

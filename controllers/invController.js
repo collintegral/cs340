@@ -9,12 +9,16 @@ invCont.buildByClassificationId = async function (req, res, next) {
     const data = await invModel.getInventoryByClassificationId(classification_id);
     const grid = await utilities.buildClassificationGrid(data);
     let nav = await utilities.getNav();
-    const className = data[0].classification_name;
-    res.render("./inventory/classification", {
-        title: className + " Vehicles",
-        nav,
-        grid
-    });
+    try {
+        const className = data[0].classification_name; 
+        res.render("./inventory/classification", {
+            title: className + " Vehicles",
+            nav,
+            grid
+        });
+    } catch(error) {
+        next(error);
+    }
 }
 
 invCont.buildByInvId = async function (req, res, next) {
