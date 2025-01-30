@@ -206,9 +206,14 @@ h1 {
 }
 
 .notice {
-  font-size: 1.5em;
+  color: red;
   font-weight: bold;
-  text-align: center;
+  list-style: none;
+  margin-left: 15%;
+}
+
+.notice > li {
+  margin: 5px;
 }
 
 footer {
@@ -221,6 +226,55 @@ footer {
   text-decoration: none;
   color: darkblue;
   display: inline;
+}
+
+.user-form-box {
+  border: 2px solid darkblue;
+  border-radius: 5px 5px;
+  background-color: skyblue;
+  width: 60%;
+  margin: 0 auto 10% auto;
+  text-align: center;
+  padding: 2%;
+}
+
+.user-form {
+  font-weight: bold;
+  padding: 3% 10%;
+}
+
+.user-form > label > input {
+  width: 80%;
+  height: 1.8rem;
+}
+
+.pw-reqs {
+  font-size: .8rem;
+  color: darkblue;
+}
+
+.submit-cont > input {
+  min-width: 15%;
+  margin: auto;
+  border: none;
+  border-radius: 4px;
+  background-color: #30308b;
+  padding: 4px;
+  color: white;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+.submit-cont {
+  text-align: center;
+}
+
+.input-text:invalid {
+  border-left: 3px solid red;
+}
+
+.input-text:valid {
+  border-left: 3px solid green;
 }
 
 @media only screen and (min-width: 600px) {
