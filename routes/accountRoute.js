@@ -2,7 +2,7 @@
 const express = require('express');
 const router = new express.Router();
 const accountController = require('../controllers/accountController');
-const regValidate = require('../utilities/account-validation');
+const validate = require('../utilities/account-validation');
 
 // Route for My Account view
 router.get("/login", accountController.buildLogin);
@@ -10,9 +10,17 @@ router.get("/login", accountController.buildLogin);
 router.get("/registration", accountController.buildRegistration);
 
 router.post('/register', 
-    regValidate.registrationRules(),
-    regValidate.checkRegData,
+    validate.registrationRules(),
+    validate.checkRegData,
     accountController.registerAccount
 );
+
+router.post('/login',
+    (req, res) => {
+        validate.loginRules(),
+        validate.checkLoginData,
+        accountController.loginAccount
+    }
+)
 
 module.exports = router;

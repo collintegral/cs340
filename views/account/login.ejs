@@ -7,10 +7,10 @@
     <%- messages() %>
 
 <section class="user-form-box">
-    <form id='login-form' class="user-form">
+    <form id='login-form' class="user-form" action="/account/login" method="post">
         <label>
             Email:
-            <br><input type="email" class="email-text" name="account_email" placeholder="Valid Email Required" required>
+            <br><input type="email" class="email-text" name="account_email" placeholder="Valid Email Required" required value="<%= locals.account_email %>" >
         </label><br>
         <label>
             Password:
