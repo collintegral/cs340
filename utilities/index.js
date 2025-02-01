@@ -49,6 +49,18 @@ Util.buildClassificationGrid = async function(data) {
     return grid;
 }
 
+/* Build the classification select dropdown for new inventory */
+Util.buildClassificationSelect = async function() {
+    let data = await invModel.getClassifications();
+    let classList = '<option value="" selected disabled>Choose a Classification</option>';
+    
+    data.rows.forEach(row => {
+        classList += '<option value="' + row.classification_id + '">'+ row.classification_name + '</option>'
+    });
+    
+    return classList;
+}
+
 /* Build the detail view HTML */
 Util.buildDetailView = async function(vehicle) {
     let item;

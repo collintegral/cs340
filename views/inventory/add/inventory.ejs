@@ -1,0 +1,66 @@
+<% if (title) { %>
+    <h1><%= title %></h1>
+<% } else { 
+    res.redirect('/');
+} %>
+
+<%- messages() %>
+
+<% if (errors) { %>
+    <ul class="notice">
+        <% errors.array().forEach(error => { %>
+            <li><%= error.msg %></li>
+        <% }); %>
+        </ul>
+<% } %>
+
+<section class="user-form-box">
+    <form id='new-inventory-form' class="user-form" action="/inv/add-inventory" method="post">
+        <label>
+            Item Make:
+            <br><input type="text" class="input-text" name="inv_make" required value="<%= locals.inv_make %>">
+            <div class="pw-reqs"></div>
+        </label><br>
+        <label>
+            Item Model:
+            <br><input type="text" class="input-text" name="inv_model" required value="<%= locals.inv_model %>">
+            <div class="pw-reqs"></div>
+        </label><br>
+        <label>
+            Item Year:
+            <br><input type="text" class="input-text" name="inv_year" pattern="\d\d\d\d" required value="<%= locals.inv_year %>">
+            <div class="pw-reqs">4 numbers only.</div>
+        </label><br>
+        <label>
+            Item Mileage:
+            <br><input type="text" class="input-text" name="inv_miles" pattern="[\d]+" required value="<%= locals.inv_miles %>">
+            <div class="pw-reqs"></div>
+            <div class="pw-reqs">Numbers only.</div>
+        </label><br>
+        <label>
+            Item Price:
+            <br><input type="text" class="input-text" name="inv_price" pattern="[1-9][\d]*(\.[\d]{2})?|0|\.[\d][\d]" required value="<%= locals.inv_price %>">
+            <div class="pw-reqs"></div>
+            <div class="pw-reqs">Do not include a dollar sign or commas.</div>
+        </label><br>
+        <label>
+            Item Color:
+            <br><input type="text" class="input-text" name="inv_color" required value="<%= locals.inv_color %>">
+            <div class="pw-reqs"></div>
+        </label><br>
+        <label>
+            Item Description:
+            <br><input type="text" class="input-text" name="inv_description" required value="<%= locals.inv_description %>">
+            <div class="pw-reqs"></div>
+        </label><br>
+        <label>
+            Classification:
+            <br><select name="classification_id" required>
+                <%- classSelect %>
+            </select><br>
+        </label><br>
+        <section class="submit-cont">
+            <input type="submit" class="submit-btn" Value="Create">
+        </section>
+    </form>
+</section>

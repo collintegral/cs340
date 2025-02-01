@@ -6,15 +6,6 @@ const validate = require('../utilities/account-validation');
 
 // Route for My Account view
 router.get("/login", accountController.buildLogin);
-
-router.get("/registration", accountController.buildRegistration);
-
-router.post('/register', 
-    validate.registrationRules(),
-    validate.checkRegData,
-    accountController.registerAccount
-);
-
 router.post('/login',
     (req, res) => {
         validate.loginRules(),
@@ -22,5 +13,12 @@ router.post('/login',
         accountController.loginAccount
     }
 )
+
+router.get("/registration", accountController.buildRegistration);
+router.post('/register', 
+    validate.registrationRules(),
+    validate.checkRegData,
+    accountController.registerAccount
+);
 
 module.exports = router;

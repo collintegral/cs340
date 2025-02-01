@@ -253,7 +253,7 @@ footer {
   color: darkblue;
 }
 
-.submit-cont > input {
+.submit-cont > * {
   min-width: 15%;
   margin: auto;
   border: none;
@@ -261,8 +261,15 @@ footer {
   background-color: #30308b;
   padding: 4px;
   color: white;
+  text-decoration: none;
   font-weight: bold;
   font-size: 1.1em;
+  display: grid;
+}
+
+.submit-cont > a {
+  padding: 5px;
+  margin: 10px;
 }
 
 .submit-cont {

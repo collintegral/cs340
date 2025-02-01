@@ -34,4 +34,33 @@ async function getInventoryByInvId(inv_id) {
     }
 }
 
-module.exports = {getClassifications, getInventoryByClassificationId, getInventoryByInvId};
+async function checkExistingClass (classification_name) {
+    try {
+        const sql = "SELECT * FROM classification WHERE classification_name = $1"
+        const classification = await pool.query(sql, [classification_name]);
+        return classification.rowCount;
+    } catch (error) {
+        return error.message;
+    }
+}
+
+async function newClassification(classification_name) {
+    try {
+        const sql = "INSERT INTO classification (classification_name) VALUES ($1) RETURNING *";
+        return await pool.query(sql, [classification_name]);
+    } catch (error) {
+        return error.message;
+    }
+}
+
+async function newInventory(inv_make, inv_model, inv_year, inv_miles, inv_price, inv_color, inv_description, classification_id, inv_image, inv_thumbnail) {
+    try {
+        const sql = "INSERT INTO inventory (inv_make, inv_model, inv_year, inv_miles, inv_price, inv_color, inv_description, classification_id, inv_image, inv_thumbnail) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING inv_id";
+        const dataArr = [inv_make, inv_model, inv_year, inv_miles, inv_price, inv_color, inv_description, classification_id, inv_image, inv_thumbnail];
+        return await pool.query(sql, dataArr);
+    } catch (error) {
+        return error.message;
+    }
+}
+
+module.exports = {getClassifications, getInventoryByClassificationId, getInventoryByInvId, checkExistingClass, newClassification, newInventory};

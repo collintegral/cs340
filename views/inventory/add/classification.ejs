@@ -1,0 +1,28 @@
+<% if (title) { %>
+    <h1><%= title %></h1>
+<% } else { 
+    res.redirect('/');
+} %>
+
+<%- messages() %>
+
+<% if (errors) { %>
+    <ul class="notice">
+        <% errors.array().forEach(error => { %>
+            <li><%= error.msg %></li>
+        <% }); %>
+        </ul>
+<% } %>
+
+<section class="user-form-box">
+    <form id='new-class-form' class="user-form" action="/inv/add-class" method="post">
+        <label>
+            New Classification Name:
+            <br><input type="text" class="input-text" name="classification_name" pattern="^[a-zA-Z]*$"  required>
+            <div class="pw-reqs">Classification names must be a single word - no spaces, special characters, or numbers.</div>
+        </label>
+        <section class="submit-cont">
+            <input type="submit" class="submit-btn" Value="Create">
+        </section>
+    </form>
+</section>
