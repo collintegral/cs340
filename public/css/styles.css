@@ -267,6 +267,11 @@ footer {
   display: grid;
 }
 
+.submit-cont > *:disabled {
+  background-color: dimgrey;
+  color: lightgrey;
+}
+
 .submit-cont > a {
   padding: 5px;
   margin: 10px;
@@ -282,6 +287,18 @@ footer {
 
 .input-text:valid {
   border-left: 3px solid green;
+}
+
+#inventoryDisplay {
+  margin: auto;
+}
+
+#inventoryDisplay > * > * > * {
+  width: 10%;
+}
+
+.vehicle-name {
+  font-size: 1.2em;
 }
 
 @media only screen and (min-width: 600px) {

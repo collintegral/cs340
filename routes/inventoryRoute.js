@@ -26,4 +26,14 @@ router.post("/add-inventory",
     invController.newInventory
 )
 
+// Fill out inventory table in management form
+router.get("/getInventory/:classification_id", invController.getInventoryJSON);
+
+// Edit inventory item
+router.get("/edit/:inventory_id", invController.buildEditInventoryView);
+router.post("/edit-inventory",
+    validate.inventoryRules(),
+    validate.checkUpdateData,
+    invController.updateInventory);
+
 module.exports = router;

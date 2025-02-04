@@ -10,3 +10,15 @@
     <a href="/inv/add-class">Add New Classification</a>
     <a href="/inv/add-inventory">Add New Inventory</a>
 </section>
+<section class="user-form-box">
+    <h2>Manage Inventory</h2>
+    <p class="pw-reqs">Please select a classification from the list below to see the items belonging to the selection.</p>
+    <select name="classification_id" id="classificationList" autocomplete="off" required>
+    <%- classificationSelect %>
+    </select>
+    
+    <table id="inventoryDisplay"></table>
+    <noscript>Javascript must be enabled to use this page.</noscript>
+</section>
+
+<script src="../../js/inventory.js"></script>

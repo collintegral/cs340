@@ -110,7 +110,7 @@ validate.checkInventoryData = async (req, res, next) => {
 
     if (!errors.isEmpty()) {
         let nav = await util.getNav();
-        const classSelect = await util.buildClassificationSelect();
+        const classSelect = await util.buildClassificationSelect(classification_id);
         res.render("./inventory/add/inventory", {
             errors,
             title: "Add New Inventory",
@@ -122,7 +122,34 @@ validate.checkInventoryData = async (req, res, next) => {
             inv_miles,
             inv_price,
             inv_color,
-            inv_description
+            inv_description,
+        });
+        return
+    }
+    next();
+}
+
+validate.checkUpdateData = async (req, res, next) => {
+    const {inv_id, inv_make, inv_model, inv_year, inv_miles, inv_price, inv_color, inv_description, classification_id } = req.body;
+    let errors = [];
+    errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        let nav = await util.getNav();
+        const classSelect = await util.buildClassificationSelect(classification_id);
+        res.render("./inventory/edit/inventory", {
+            errors,
+            title: `Edit Inventory: ${name}`,
+            classSelect,
+            nav,
+            inv_id,
+            inv_make,
+            inv_model,
+            inv_year,
+            inv_miles,
+            inv_price,
+            inv_color,
+            inv_description,
         });
         return
     }

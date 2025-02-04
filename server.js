@@ -12,11 +12,12 @@ const app = express()
 const utilities = require("./utilities/")
 const session = require("express-session")
 const pool = require('./database/')
+const cookieParser = require("cookie-parser")
 
 // Required Routes
 const static = require("./routes/static")
 const inventoryRoute = require("./routes/inventoryRoute")
-const accountRoute = require("./routes/accountRoute");
+const accountRoute = require("./routes/accountRoute")
 
 // Required Controllers
 const baseController = require("./controllers/baseController")
@@ -46,6 +47,12 @@ app.use(function(req, res, next) {
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+
+// Cookie Parser
+app.use(cookieParser());
+
+// Cookie Checker
+app.use(utilities.checkJWTToken);
 
 /* ***********************
  * View Engine & Templates

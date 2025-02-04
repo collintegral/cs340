@@ -1,6 +1,8 @@
 const utilities = require("../utilities/index.js");
 const accountModel = require("../models/account-model.js");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 const accountController = {};
 
 // Deliver Login View
@@ -72,29 +74,50 @@ accountController.loginAccount = async function (req, res) {
     let nav = await utilities.getNav();
     const {account_email, account_password} = req.body;
 
-    const loginResult = await accountModel.loginAccount(
-        account_email,
-        account_password
-    );
-
-    if (loginResult) {
-        req.flash(
-            "notice",
-            `Congratulations, ${account_firstname}, you\'ve logged in.`
-        );
-        res.status(201).render("/", {
-            title: "Home",
-            nav,
-            errors: null
-        });
-    } else {
-        req.flash("notice", "Sorry, the login failed.");
-        req.status(501).render("account/login", {
+    const accountData = await accountModel.getAccountByEmail(account_email);
+    if (!accountData) {
+        req.flash("notice", "Sorry, the login failed. Please check your credentials.");
+        res.status(400).render("account/login", {
             title: "Login",
             nav,
-            errors: null
-        });
+            errors: null,
+            account_email
+        })
+        return;
     }
+    
+    try {
+        if (await bcrypt.compare(account_password, accountData.account_password)) {
+            delete accountData.account_password;
+            const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 * 1000 });
+
+            if (process.env.NODE_ENV === 'development') {
+                res.cookie("jwt", accessToken, {httpOnly: true, maxAge: 3600 * 1000});
+            } else {
+                res.cookie("jwt", accessToken, {httpOnly: true, secure: true, maxAge: 3600 * 1000});
+            }
+            return res.redirect('/account')
+        } else {
+            req.flash("message notice", "Sorry, the login failed. Please check your credentials.");
+            res.status(400).render("account/login", {
+            title: "Login",
+            nav,
+            errors: null,
+            account_email
+            });
+        }
+    } catch (error) {
+        throw new Error('Access Forbidden.');
+    }
+}
+
+accountController.buildAccountView = async function (req, res) {
+    let nav = await utilities.getNav();
+    res.render('./account/', {
+        title: 'Account Page',
+        nav,
+        errors: null
+    });
 }
 
 module.exports = accountController;

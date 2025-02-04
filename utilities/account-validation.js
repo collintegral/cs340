@@ -57,13 +57,7 @@ validate.loginRules = () => {
         .notEmpty()
         .isEmail()
         .normalizeEmail()
-        .withMessage("A valid email address is required.")
-        .custom(async (account_email) => {
-            const emailExists = await accountModel.checkExistingEmail(account_email);
-            if (!emailExists) {
-                throw new Error("An account with this email does not exist. Please log with a different email.")
-            }
-        }),
+        .withMessage("A valid email address is required."),
 
         body("account_password")
         .trim()
