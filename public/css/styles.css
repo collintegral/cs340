@@ -253,7 +253,7 @@ footer {
   color: darkblue;
 }
 
-.submit-cont > * {
+.submit-cont > .button {
   min-width: 15%;
   margin: auto;
   border: none;
@@ -272,7 +272,7 @@ footer {
   color: lightgrey;
 }
 
-.submit-cont > a {
+.submit-cont > .inv-button {
   padding: 5px;
   margin: 10px;
 }
