@@ -1,4 +1,5 @@
 const invModel = require("../models/inventory-model");
+const accountModel = require("../models/account-model");
 const jwt = require("jsonwebtoken");
 require("dotenv").config;
 const Util = {};
@@ -20,6 +21,8 @@ Util.getNav = async function(req, res, next) {
     list += '</ul>';
     return list;
 }
+
+
 
 /* Build the Classification View HTML */
 Util.buildClassificationGrid = async function(data) {
@@ -112,7 +115,10 @@ Util.checkJWTToken = (req, res, next) => {
                     return res.direct("/account/login");
                 }
                 res.locals.accountData = accountData;
-                res.locals.loggedIn = 1;
+                res.locals.loggedIn = 1
+                res.locals.account_type = accountData.account_type;
+                res.locals.account_firstname = accountData.account_firstname;
+                res.locals.account_id = accountData.account_id;
                 next();
             }
         );
@@ -121,12 +127,43 @@ Util.checkJWTToken = (req, res, next) => {
     }
 }
 
+Util.getLoginTools = (req, res, next) => {
+    let loginTools ="";
+    if (res.locals.loggedIn) {
+        loginTools = '<a title="Click to Access your Account" href="/account">Account</a><a title="Click to Log Out" href="/account/logout">Log Out</a>';
+    } else {
+        loginTools = '<a title="Click to Register" href="/account/register">Register</a><a title="Click to Log In" href="/account/login">Log In</a>';
+    }
+    res.locals.loginTools = loginTools;
+    next();
+}
+
+
 Util.checkLogin = (req, res, next) => {
     if (res.locals.loggedIn) {
         next();
     } else {
         req.flash("notice", "Please log in.");
         return res.redirect("/account/login");
+    }
+}
+
+Util.checkAccountPermissions = (req, res, next) => {
+    let accountTools = "";
+    if (res.locals.account_type === 'Employee' || res.locals.account_type === 'Admin') {
+        accountTools += '<a title="Click for Inventory Management" href="/inv/manage">Manage Inventory</a>'
+    }
+    accountTools += '<a title="Click to Update Account" href="/account/update">Update Account</a><a title="Click to Log Out" href="/account/logout">Log Out</a>';
+    res.locals.accountTools = accountTools;
+    next();
+}
+
+Util.defendPermissions = (req, res, next) => {
+    if (res.locals.account_type === 'Employee' || res.locals.account_type === 'Admin') {
+        next();
+    } else {
+        req.flash("notice", "You do not have access to this function. If this is in error, please contact your local admin.");
+        return res.redirect("/account");
     }
 }
 

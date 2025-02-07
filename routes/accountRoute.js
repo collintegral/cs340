@@ -21,6 +21,21 @@ router.post('/register',
     accountController.registerAccount
 );
 
-router.get("/", utilities.checkLogin, invController.buildManagementView);
+router.get("/", utilities.checkLogin, utilities.checkAccountPermissions, accountController.buildAccountView);
+
+router.get("/update", utilities.checkLogin, accountController.buildAccountUpdateView);
+router.post("/update/info",
+    validate.updateInfoRules(),
+    validate.checkUpdateInfoData,
+    accountController.updateAccount
+);
+
+router.post("/update/password",
+    validate.updatePasswordRules(),
+    validate.checkUpdatePasswordData,
+    accountController.updatePassword
+);
+
+router.get("/logout", accountController.buildLogout);
 
 module.exports = router;

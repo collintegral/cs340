@@ -175,7 +175,7 @@ invCont.updateInventory = async function (req, res, next) {
             "notice",
             `${itemName} updated. View it <a href="../../inv/detail/${updateResult.inv_id}">Here</a>.`,
         );
-        res.redirect("/inv/");
+        res.redirect("/inv/manage");
     } else {
         req.flash("notice", "The update failed.");
         const itemName = inv_make + " " + inv_model;
@@ -227,7 +227,7 @@ invCont.deleteInventory = async function (req, res, next) {
             "notice",
             `${itemName} deleted successfully.`,
         );
-        res.redirect("/inv/");
+        res.redirect("/inv/manage");
     } else {
         req.flash("notice", "The deletion failed.");
         const itemName = inv_make + " " + inv_model;

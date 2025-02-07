@@ -19,12 +19,39 @@
   color: black;
 }
 
-#tools * {
-  position: absolute;
+.tools {
+  display: flex;
+  flex-direction: column;
+}
+
+.corner {
+position: absolute;
   top: 1%;
   right: 2%;
+}
+
+.account {
+  max-width: 40%;
+  margin: 5% auto;
+}
+
+.tools > * {
+  width: 100%;
+  text-align: center;
+  margin: 2px auto;
+  border: none;
+  border-radius: 4px;
+  background-color: #30308b;
+  padding: 5px;
+  color: white;
   text-decoration: none;
-  color: black;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+.account > * {
+  padding: 15px;
+  margin: 10px auto;
 }
 
 nav > ul {
@@ -94,6 +121,12 @@ nav > ul > li:hover > a {
   display: block;
   margin: auto;
   max-width: 100%;
+}
+
+.welcome {
+  text-align: center;
+  margin: auto;
+  color: darkblue;
 }
 
 #reviews > ul {
@@ -209,7 +242,10 @@ h1 {
   color: red;
   font-weight: bold;
   list-style: none;
-  margin-left: 15%;
+  margin: auto;
+  padding-left: 0;
+  width: 50%;
+  text-align: center;
 }
 
 .notice > li {

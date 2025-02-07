@@ -15,6 +15,14 @@ accountController.buildLogin = async function(req, res, next) {
     });
 }
 
+// Log out and return to home
+accountController.buildLogout = async function (req, res, next) {
+    let nav = await utilities.getNav();
+    res.status(202).clearCookie('jwt');
+    req.flash("notice", "You've successfully logged out.");
+    res.redirect("/");
+}
+
 // Deliver Registration View
 accountController.buildRegistration = async function(req, res, next) {
     let nav = await utilities.getNav();
@@ -111,13 +119,98 @@ accountController.loginAccount = async function (req, res) {
     }
 }
 
+// Deliver account management page view
 accountController.buildAccountView = async function (req, res) {
     let nav = await utilities.getNav();
-    res.render('./account/', {
-        title: 'Account Page',
+    res.render('./account', {
+        title: 'Account',
         nav,
         errors: null
     });
+}
+
+accountController.buildAccountUpdateView = async function (req, res) {
+    let nav = await utilities.getNav();
+    let accountData = await accountModel.getAccountById(res.locals.account_id);
+    let account_id = accountData.account_id;
+    let account_firstname = accountData.account_firstname;
+    let account_lastname = accountData.account_lastname;
+    let account_email = accountData.account_email;
+
+    res.render('./account/update', {
+        title: 'Update Account',
+        nav,
+        account_id,
+        account_firstname,
+        account_lastname,
+        account_email,
+        errors: null
+    })
+}
+
+accountController.updateAccount = async function (req, res) {
+    let nav = await utilities.getNav();
+    const {account_firstname, account_lastname, account_email, account_id} = req.body;
+    const updateResult = await accountModel.updateAccountInfo(account_firstname, account_lastname, account_email, account_id);
+    
+    if (updateResult) {
+        const account_firstname = updateResult.account_firstname;
+        req.flash("notice", `Your account has been successfully updated, ${account_firstname}.`);
+        res.redirect("/account");
+    } else {
+        req.flash("notice", "The update failed.");
+        res.render('./account/update', {
+            title: 'Update Account',
+            nav,
+            account_id,
+            account_firstname,
+            account_lastname,
+            errors: null
+        });
+    }
+}
+
+accountController.updatePassword = async function (req, res) {
+    let nav = await utilities.getNav();
+    const {new_password, account_id} = req.body;
+    const accountData = await accountModel.getAccountById(account_id);
+    const account_firstname = accountData.account_firstname;
+    const account_lastname = accountData.account_lastname;
+    const account_email = accountData.account_email;
+
+    let hashedPassword;
+    try {
+        hashedPassword = await bcrypt.hashSync(new_password, 10);
+    } catch (error) {
+        req.flash("notice", 'Sorry, there was an error processing the registration.');
+        res.status(500).render("account/update", {
+            title: "Update Account",
+            nav,
+            account_id,
+            account_firstname,
+            account_lastname,
+            account_email,
+            errors: null
+        });
+    }
+
+    const updateResult = await accountModel.updateAccountPassword(hashedPassword, account_id);
+
+    if (updateResult) {
+        req.flash("notice", `Your account has been successfully updated, ${account_firstname}.`);
+        res.redirect("/account");
+    } else {
+        req.flash("notice", "The update failed.");
+        res.render('./account/update', {
+            title: 'Update Account',
+            nav,
+            account_id,
+            account_firstname,
+            account_lastname,
+            account_email,
+            errors: null
+        });
+    }
 }
 
 module.exports = accountController;

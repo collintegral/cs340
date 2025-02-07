@@ -1,0 +1,67 @@
+<% if (title) { %>
+    <h1><%= title %></h1>
+    <% } else { 
+        res.redirect('/');
+    } %>
+    
+<%- messages() %>
+
+<% if (errors) { %>
+    <ul class="notice">
+        <% errors.array().forEach(error => { %>
+            <li><%= error.msg %></li>
+        <% }); %>
+        </ul>
+<% } %>
+
+<section class="user-form-box">
+    <h3>Update Account Information</h3>
+    <form id='update-info-form' class="user-form" action="/account/update/info" method="post">
+        <label>
+            First Name:
+            <br><input type="text" class="firstname-text" name="account_firstname" placeholder="First Name Required" required value="<%= locals.account_firstname %>" >
+        </label><br>
+        <label>
+            Last Name:
+            <br><input type="text" class="lastname-text" name="account_lastname" placeholder="Last Name Required" required value="<%= locals.account_lastname %>" >
+        </label><br><br>
+        <label>
+            Email:
+            <br><input type="email" class="email-text" name="account_email" placeholder="Valid Email Required" required value="<%= locals.account_email %>" >
+        </label><br><br>
+        <section class="submit-cont">
+            <input type="submit" id = "update-info-btn" class="submit-btn button" value="Update Info" disabled>
+            <input type="hidden" name="account_id"
+            <% if(locals.account_id) { %> value="<%= locals.account_id %>"
+            <% } %>>
+        </section>
+    </form>
+</section>
+<section class="user-form-box">
+    <h3>Update Password</h3>
+    <div class="pw-reqs">All passwords must be at least 12 characters long and contain at least 1 capital letter, one lower-case letter, 1 number, and 1 special character.This will change your password!</div>
+    <form id='update-pw-form' class="user-form" action="/account/update/password" method="post">
+        <label>
+            Old Password:
+            <br><input type="password" class="password-text" name="account_password"  placeholder="Valid Password Required" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$" required>
+        </label><br><br>
+        <label>
+            New Password:
+            <br><input type="password" class="password-text" name="new_password"  placeholder="Valid Password Required" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$" required>
+            
+        </label><br>
+        <label>
+            Confirm New Password:
+            <br><input type="password" class="password-text" name="confirm_password"  placeholder="Valid Password Required" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$" required>
+            
+        </label><br><br>
+        <section class="submit-cont">
+            <input type="submit" id="update-pw-btn" class="submit-btn button" value="Update Password" disabled>
+            <input type="hidden" name="account_id"
+            <% if(locals.account_id) { %> value="<%= locals.account_id %>"
+            <% } %>>
+        </section>
+    </form>
+</section>
+
+<script src="../../js/account-update.js"></script>

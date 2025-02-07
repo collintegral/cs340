@@ -67,16 +67,16 @@ app.set("layout", "./layouts/layout")
 app.use(utilities.handleErrors(static));
 
 // Inventory Route
-app.use("/inv", utilities.handleErrors(inventoryRoute));
+app.use("/inv", utilities.getLoginTools, utilities.handleErrors(inventoryRoute));
 
 // Account Route
-app.use("/account", utilities.handleErrors(accountRoute));
+app.use("/account", utilities.getLoginTools, utilities.handleErrors(accountRoute));
 
 // Error Testing Route
-app.use("/error", utilities.handleErrors(errController.footerErr));
+app.use("/error", utilities.getLoginTools, utilities.handleErrors(errController.footerErr));
 
 // Index Route
-app.get("/", utilities.handleErrors(baseController.buildHome));
+app.get("/", utilities.getLoginTools, utilities.handleErrors(baseController.buildHome));
 
 // FileNotFound Route
 app.use(async (req, res, next) => {

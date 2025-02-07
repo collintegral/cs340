@@ -1,6 +1,7 @@
 // Required Resources
 const express = require('express');
 const router = new express.Router();
+const utilities = require('../utilities/');
 const invController = require('../controllers/invController');
 const validate = require('../utilities/inventory-validation');
 
@@ -10,17 +11,17 @@ router.get("/type/:classificationId", invController.buildByClassificationId);
 // Route for building detail by item id view
 router.get("/detail/:invId", invController.buildByInvId);
 
-router.get("/", invController.buildManagementView);
+router.get("/manage", utilities.defendPermissions, invController.buildManagementView);
 
-router.get("/add-class", invController.buildAddClassView);
-router.post("/add-class",
+router.get("/manage/add-class", invController.buildAddClassView);
+router.post("/manage/add-class",
     validate.classificationRules(),
     validate.checkClassData,
     invController.newClass
 )
 
-router.get("/add-inventory", invController.buildAddInventoryView);
-router.post("/add-inventory",
+router.get("/manage/add-inventory", invController.buildAddInventoryView);
+router.post("/manage/add-inventory",
     validate.inventoryRules(),
     validate.checkInventoryData,
     invController.newInventory
@@ -30,13 +31,13 @@ router.post("/add-inventory",
 router.get("/getInventory/:classification_id", invController.getInventoryJSON);
 
 // Edit inventory item
-router.get("/edit/:inventory_id", invController.buildEditInventoryView);
-router.post("/edit-inventory",
+router.get("/manage/edit/:inventory_id", invController.buildEditInventoryView);
+router.post("/manage/edit-inventory",
     validate.inventoryRules(),
     validate.checkUpdateData,
     invController.updateInventory);
 
-router.get("/delete/:inventory_id", invController.buildDeleteInventoryView);
-router.post("/delete-inventory", invController.deleteInventory);
+router.get("/manage/delete/:inventory_id", invController.buildDeleteInventoryView);
+router.post("/manage/delete-inventory", invController.deleteInventory);
 
 module.exports = router;
