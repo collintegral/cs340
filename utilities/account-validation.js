@@ -98,9 +98,9 @@ validate.updateInfoRules = () => {
         .isEmail()
         .normalizeEmail()
         .withMessage("A valid email address is required.")
-        .custom(async (account_email) => {
+        .custom(async (account_email, {req}) => {
             const emailExists = await accountModel.checkExistingEmail(account_email);
-            if (emailExists) {
+            if (emailExists && emailExists.account_id != req.body.account_id) {
                 throw new Error("An account with this email already exists. Please use a different email.")
             }
         })

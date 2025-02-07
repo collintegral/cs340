@@ -15,8 +15,8 @@ async function registerAccount(account_firstname, account_lastname, account_emai
 async function checkExistingEmail(account_email) {
     try {
         const sql = "SELECT * FROM account WHERE account_email = $1"
-        const email = await pool.query(sql, [account_email]);
-        return email.rowCount;
+        const emailResult = await pool.query(sql, [account_email]);
+        return emailResult.rows[0];
     } catch (error) {
         return error.message;
     }
