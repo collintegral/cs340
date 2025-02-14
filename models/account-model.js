@@ -69,4 +69,31 @@ async function updateAccountPassword(new_password, account_id) {
     }
 }
 
-module.exports = {registerAccount , checkExistingEmail, getAccountByEmail, getAccountById, updateAccountInfo, updateAccountPassword };
+async function addOffer(account_id, inv_id, offer_amount) {
+    const newOffer = `${inv_id};${offer_amount};PENDING`;
+    const currentOffers = await getOfferHistoryById(account_id);
+    let fullOffers;
+    if (currentOffers[0].account_offers) {
+        fullOffers = `${newOffer}||` + currentOffers[0].account_offers;
+    }
+    else {
+        fullOffers = newOffer;
+    }
+
+    const sql = `UPDATE account SET account_offers=$2 WHERE account_id = $1`;
+    const dataArr = [account_id, fullOffers];
+    try {
+        const results = await pool.query(sql, dataArr);
+        return results;
+    } catch(error) {
+        return new Error("Failed adding offer.");
+    }   
+}
+
+async function getOfferHistoryById(account_id) {
+    const sql = `SELECT account_offers FROM account WHERE account_id = $1`;
+    const results = await pool.query(sql, [account_id]);
+    return results.rows;
+}
+
+module.exports = {registerAccount , checkExistingEmail, getAccountByEmail, getAccountById, updateAccountInfo, updateAccountPassword, addOffer, getOfferHistoryById };

@@ -32,7 +32,6 @@ function buildInventoryList(data) {
 
     // Iterate over data to generate rows
     data.forEach(element => {
-        console.log(element.inv_id + ", " + element.inv_model);
         dataTable += `<tr><td class="vehicle-name">${element.inv_make} ${element.inv_model}</td>`;
         dataTable += `<td class="submit-cont"><a href='/inv/manage/edit/${element.inv_id}' class="button inv-button" title='Click to Update'>Modify</a></td>`;
         dataTable += `<td class="submit-cont"><a href='/inv/manage/delete/${element.inv_id}' class="button inv-button" title='Click to Delete'>Delete</a></td></tr>`;

@@ -89,9 +89,32 @@ Util.buildDetailView = async function(vehicle) {
         item += '<span class="detail-span">Miles: ' + new Intl.NumberFormat('en-US').format(vehicle.inv_miles) + '</span>';
         item += '<span class="detail-span">$' + new Intl.NumberFormat('en-US').format(vehicle.inv_price) + '</span>';
         item += '<hr />';
-        item += '<p>' + vehicle.inv_description + '</p>'
+        item += '<p>' + vehicle.inv_description + '</p>';
+        item += `<div class="tools"><a href="/inv/detail/${vehicle.inv_id}/offer" class="offer-btn">Make An Offer</a></div>`;
+        
         item += '</div>';
         } else {
+        item = '<p class="notice">Sorry, couldn\'t find a vehicle with this ID.</p>';
+    }
+    return item;
+}
+
+Util.buildOfferView = async function(vehicle) {
+    let item;
+    if (vehicle) {
+        item = `<div class="detail-view offer-div">
+        <img src="${vehicle.inv_image}" alt="Image of ${vehicle.inv_make} ${vehicle.inv_model} on SCE Motors" class="detail-img offer-img"/>
+        <div class="offer-vehicle-details">
+        <div class="offer-vehicle-info">
+        <h2>${vehicle.inv_year} ${vehicle.inv_color} ${vehicle.inv_make} ${vehicle.inv_model}</h2>
+        <span class="detail-span offer-span">Miles: ${new Intl.NumberFormat('en-US').format(vehicle.inv_miles)}</span>
+        <span class="detail-span offer-span">Price: $${new Intl.NumberFormat('en-US').format(vehicle.inv_price)}</span>
+        </div>
+        <hr />
+        <p>${vehicle.inv_description}</p>
+        </div>
+        </div>`;
+    } else {
         item = '<p class="notice">Sorry, couldn\'t find a vehicle with this ID.</p>';
     }
     return item;
@@ -153,7 +176,9 @@ Util.checkAccountPermissions = (req, res, next) => {
     if (res.locals.account_type === 'Employee' || res.locals.account_type === 'Admin') {
         accountTools += '<a title="Click for Inventory Management" href="/inv/manage">Manage Inventory</a>'
     }
-    accountTools += '<a title="Click to Update Account" href="/account/update">Update Account</a><a title="Click to Log Out" href="/account/logout">Log Out</a>';
+    accountTools += `<a title="Click for Offer History" href="/account/offer-history">Offer History</a>
+    <a title="Click to Update Account" href="/account/update">Update Account</a>
+    <a title="Click to Log Out" href="/account/logout">Log Out</a>`;
     res.locals.accountTools = accountTools;
     next();
 }
@@ -165,6 +190,54 @@ Util.defendPermissions = (req, res, next) => {
         req.flash("notice", "You do not have access to this function. If this is in error, please contact your local admin.");
         return res.redirect("/account");
     }
+}
+
+Util.objOfferHistory = async function(account_id) {
+let currentOffers = await accountModel.getOfferHistoryById(account_id);
+currentOffers = currentOffers[0].account_offers;
+
+    if (currentOffers) {
+        let resultsArr = currentOffers.split("||");
+        let results = [];
+        resultsArr.forEach(result => {
+            results.push(result.split(";"));
+        });
+        return results;
+    }
+    else {
+        return currentOffers;
+    }
+}
+
+Util.buildOfferHistoryGrid = async function(offerList) {
+    let offerViewGrid;
+    console.log(offerList);
+    if (offerList) {
+        offerViewGrid = '<ul id="offer-display">';
+        for (const offer of offerList) {
+            let offerItem = await invModel.getInventoryByInvId(offer[0]);
+            offerViewGrid += `
+            <li>
+            <section class="offer-image">
+            <a href="../../inv/detail/${offerItem.inv_id}" title="View ${offerItem.inv_make} ${offerItem.model} inventory screen">
+            <img class="offer-img" src="${offerItem.inv_thumbnail}" alt="Image of ${offerItem.inv_make} ${offerItem.model} on SCE Motors" /></a>
+            </section>
+            <section class="offer-info">
+            <h2 class=offer-title>${offerItem.inv_year} ${offerItem.inv_make} ${offerItem.inv_model}</h2>
+            <section class="offer-details">
+            <h3>They Asked: $${offerItem.inv_price}</h3>
+            <h3>You Offered: $${offer[1]}</h3>
+            <h3>Current Status: ${offer[2].toUpperCase()}</h3>
+            </section>
+            </section>`
+        }
+
+        offerViewGrid += '</ul>';
+
+    } else {
+        offerViewGrid = '<p class="notice">Sorry, no offers could be found.</p>'
+    }
+    return offerViewGrid;
 }
 
 module.exports = Util;

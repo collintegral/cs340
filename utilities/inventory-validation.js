@@ -85,6 +85,18 @@ validate.inventoryRules = () => {
     ]
 }
 
+validate.offerRules = () => {
+    return [
+        body("offer_amount")
+        .trim()
+        .escape()
+        .notEmpty()
+        .isLength({min: 1})
+        .matches(/[1-9][\d]*(\.[\d]{2})?|0|\.[\d][\d]/)
+        .withMessage("Offer Price does not meet requirements.")
+    ]
+}
+
 // Check data against rules and return errors, or continue creation if no errors.
 validate.checkClassData = async (req, res, next) => {
     const classification_name = req.body;
@@ -150,6 +162,34 @@ validate.checkUpdateData = async (req, res, next) => {
             inv_price,
             inv_color,
             inv_description,
+        });
+        return
+    }
+    next();
+}
+
+validate.checkOfferData = async (req, res, next) => {
+    const {offer_amount} = req.body;
+    let errors = [];
+    errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        const inv_id = req.params.invId;
+        const data = await inventoryModel.getInventoryByInvId(inv_id);
+        let inv_price = offer_amount;
+        let account_id = res.locals.account_id;
+        const item = await util.buildOfferView(data);
+        let nav = await util.getNav();
+        const pageTitle = "Vehicle Offer";
+    
+        res.render("./inventory/offer", {
+            title: pageTitle,
+            nav,
+            item,
+            inv_id,
+            inv_price,
+            account_id,
+            errors
         });
         return
     }

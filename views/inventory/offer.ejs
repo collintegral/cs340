@@ -1,0 +1,38 @@
+<% if (title) { %>
+    <h1><%= title %></h1>
+    <% } else { 
+        res.redirect('/');
+    } %>
+    
+    <%- messages() %>
+
+    <% if (errors) { %>
+        <ul class="notice">
+            <% errors.array().forEach(error => { %>
+                <li><%= error.msg %></li>
+            <% }); %>
+            </ul>
+    <% } %>
+    
+
+    <section class="offer-overview">
+        <%- item %>
+
+        <div>
+            <form id="offer-form" class="user-form" action="/inv/detail/<%-locals.inv_id%>/offer" method="post">
+                <p class="pw-reqs">Submit your offer; the seller may either accept, counter, or reject your bid.</p>
+                <label>
+                    Your Offer:
+                    <br><input type="text" class="input-text" name="offer_amount" required pattern="[1-9][\d]*(\.[\d]{2})?|0|\.[\d][\d]" value="<%= locals.inv_price %>">
+                <div class="pw-reqs">Do not include a dollar sign or commas.</div>
+                </label></br>
+                <section class="submit-cont">
+                    <input type="submit" class="submit-btn button" Value="Make Offer">
+                </section>
+                <input type="hidden" name="account_id"
+                <% if(locals.account_id) { %> value="<%= locals.account_id %>"
+                <% } %>>
+                <input type="hidden" name="inv_id" value="<%- locals.inv_id %>">
+            </form>
+        </div>
+    </section>

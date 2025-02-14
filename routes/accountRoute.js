@@ -38,4 +38,6 @@ router.post("/update/password",
 
 router.get("/logout", accountController.buildLogout);
 
+router.get("/offer-history", utilities.checkLogin, accountController.buildOfferHistoryView);
+
 module.exports = router;

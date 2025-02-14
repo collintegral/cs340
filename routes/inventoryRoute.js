@@ -10,6 +10,12 @@ router.get("/type/:classificationId", invController.buildByClassificationId);
 
 // Route for building detail by item id view
 router.get("/detail/:invId", invController.buildByInvId);
+router.get("/detail/:invId/offer", utilities.checkLogin, invController.buildMakeOfferView);
+router.post("/detail/:invId/offer",
+    validate.offerRules(),
+    validate.checkOfferData,
+    invController.newOffer
+)
 
 router.get("/manage", utilities.defendPermissions, invController.buildManagementView);
 

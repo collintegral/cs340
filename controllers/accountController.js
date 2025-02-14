@@ -213,4 +213,22 @@ accountController.updatePassword = async function (req, res) {
     }
 }
 
+accountController.buildOfferHistoryView = async function (req, res, next) {
+    let nav = await utilities.getNav();
+    let account_id = res.locals.account_id;
+    
+    let offerData = await utilities.objOfferHistory(account_id);
+    let offerList = await utilities.buildOfferHistoryGrid(offerData);
+    try {
+        res.render('./account/offer-history', {
+        title: 'Offers',
+        nav,
+        offerList,
+        errors: null
+        });
+    } catch(error) {
+        next(error);
+    }
+}
+
 module.exports = accountController;

@@ -191,6 +191,42 @@ nav > ul > li:hover > a {
   margin: auto;
 }
 
+#offer-display {
+  list-style: none;
+  padding-left: none;
+  display: flex;
+  flex-direction: column;
+}
+
+#offer-display > li {
+  margin: 5px auto;
+  width: 80%;
+  border: 2px black solid;
+  border-radius: 2%;
+  display: grid;
+  grid-template-columns: 33% 67%;
+}
+
+.offer-image {
+  grid-column: 1 / 2;
+  margin: auto;
+}
+
+.offer-img {
+  border: 3px solid skyblue;
+  border-radius: 6px;
+}
+
+.offer-info {
+  grid-column: 2 / 3;
+  margin: auto 10px;
+}
+
+.offer-btn {
+  margin: auto;
+  max-width: 30%;
+}
+
 .name-price > hr {
   margin: auto;
   max-width: 80%;
@@ -236,6 +272,10 @@ h1 {
   border: 3px solid skyblue;
   border-radius: 6px;
   max-width: 90%;
+}
+
+.offer-img {
+  margin: 20px;
 }
 
 .notice {

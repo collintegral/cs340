@@ -1,4 +1,5 @@
 const invModel = require("../models/inventory-model");
+const accountModel = require("../models/account-model");
 const utilities = require("../utilities/");
 
 const invCont = {};
@@ -87,7 +88,7 @@ invCont.newClass = async function (req, res, next) {
         });
     } else {
         req.flash("notice", "The creation failed.");
-        req.status(501).render('./inventory/add/classification', {
+        res.status(501).render('./inventory/add/classification', {
             title: "Add New Classification",
             nav,
             errors: null
@@ -117,7 +118,7 @@ invCont.newInventory = async function (req, res, next) {
     } else {
         req.flash("notice", "The creation failed.");
         const classSelect = await utilities.buildClassificationSelect();
-        req.status(501).render('./inventory/add/inventory', {
+        res.status(501).render('./inventory/add/inventory', {
             title: "Add new Inventory",
             classSelect,
             nav,
@@ -180,7 +181,7 @@ invCont.updateInventory = async function (req, res, next) {
         req.flash("notice", "The update failed.");
         const itemName = inv_make + " " + inv_model;
         const classSelect = await utilities.buildClassificationSelect(classification_id);
-        req.status(501).render('./inventory/edit/inventory', {
+        res.status(501).render('./inventory/edit/inventory', {
             title: `Edit Inventory: ${name}`,
             classSelect,
             inv_id,
@@ -231,7 +232,7 @@ invCont.deleteInventory = async function (req, res, next) {
     } else {
         req.flash("notice", "The deletion failed.");
         const itemName = inv_make + " " + inv_model;
-        req.status(501).render('./inventory/edit/delete-confirm', {
+        res.status(501).render('./inventory/edit/delete-confirm', {
             title: `Delete Inventory: ${itemName}`,
             classSelect,
             inv_id,
@@ -241,6 +242,56 @@ invCont.deleteInventory = async function (req, res, next) {
             inv_price,
             errors: null
         });
+    }
+}
+
+invCont.buildMakeOfferView = async function (req, res, next) {
+    const inv_id = req.params.invId;
+    const data = await invModel.getInventoryByInvId(inv_id);
+    let inv_price = data.inv_price;
+    let account_id = res.locals.account_id;
+    const item = await utilities.buildOfferView(data);
+    let nav = await utilities.getNav();
+
+    res.render("./inventory/offer", {
+        title: "Vehicle Offer",
+        nav,
+        item,
+        inv_price,
+        inv_id,
+        account_id,
+        errors: null
+    });
+}
+
+invCont.newOffer = async function (req, res, next) {
+    const { account_id, inv_id, offer_amount } = req.body;
+    const offerResult = await accountModel.addOffer(account_id, inv_id, offer_amount);
+
+    let nav = await utilities.getNav();
+    if (offerResult) {
+        req.flash(
+            "notice",
+            `Offer made successfully.`,
+        );
+        res.redirect("/account/offer-history");
+    } else {
+        const inv_id = req.params.invId;
+        const data = await invModel.getInventoryByInvId(inv_id);
+        let inv_price = data.inv_price;
+        let account_id = res.locals.account_id;
+        const item = await utilities.buildOfferView(data);
+
+        req.flash("notice", "The offer failed.");
+        res.status(501).render("./inventory/offer", {
+        title: "Vehicle Offer",
+        nav,
+        item,
+        inv_price,
+        inv_id,
+        account_id,
+        errors: null
+    });
     }
 }
 

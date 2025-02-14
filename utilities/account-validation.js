@@ -126,7 +126,6 @@ validate.updatePasswordRules = () => {
             } else {
                 try {
                     result = bcrypt.compareSync(account_password, accountData.account_password);
-                    console.log(result);
                     if (result) {
                         delete accountData.account_password;
                     } else {
